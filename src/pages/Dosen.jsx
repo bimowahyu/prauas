@@ -1,14 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import {
-  fetchDosens,
-  addDosen,
-  deleteDosen,
-  updateDosen
-} from '../api.js';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDosen } from '../hooks/useDosen.js';
 
-const limit = 5;
 const initialForm = {
   nama: '',
   NomorInduk: '',
@@ -23,40 +16,17 @@ const Dosen = () => {
   const [page, setPage] = useState(1);
   const [form, setForm] = useState(initialForm);
   const [editingId, setEditingId] = useState(null);
-  const queryClient = useQueryClient();
 
   const {
-    data: dosens = [],
+    dosens,
     isLoading,
     isError,
-    error
-  } = useQuery({
-    queryKey: ['dosens', page],
-    queryFn: () => fetchDosens(page, limit).then(res => res.data),
-    keepPreviousData: true
-  });
-
-  const addMutation = useMutation({
-    mutationFn: addDosen,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['dosens']);
-      setForm(initialForm);
-    }
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => updateDosen(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['dosens']);
-      setEditingId(null);
-      setForm(initialForm);
-    }
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteDosen,
-    onSuccess: () => queryClient.invalidateQueries(['dosens'])
-  });
+    error,
+    addMutation,
+    updateMutation,
+    deleteMutation,
+    limit,
+  } = useDosen(page);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,7 +39,9 @@ const Dosen = () => {
       ...form,
       Matkul: form.Matkul.split(',').map(k => k.trim()).filter(Boolean),
     };
-    addMutation.mutate(dataToSend);
+    addMutation.mutate(dataToSend, {
+      onSuccess: () => setForm(initialForm),
+    });
   };
 
   const handleEdit = (dosen) => {
@@ -91,7 +63,15 @@ const Dosen = () => {
       ...form,
       Matkul: form.Matkul.split(',').map(k => k.trim()).filter(Boolean),
     };
-    updateMutation.mutate({ id: editingId, data: dataToSend });
+    updateMutation.mutate(
+      { id: editingId, data: dataToSend },
+      {
+        onSuccess: () => {
+          setForm(initialForm);
+          setEditingId(null);
+        },
+      }
+    );
   };
 
   const handleDelete = (id) => {

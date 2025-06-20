@@ -1,0 +1,30 @@
+Fitur Utama yang Harus Dibuat
+
+1. Halaman Login
+   Login menggunakan data dummy. Simpan info user di localStorage.
+   . Jika login berhasil, redirect ke /admin/dashboard. Gunakan toast untuk notifikasi berhasil login. Gunakan sweetalert2 untuk konfirmasi logout.
+2. Halaman Dashboard
+   ⚫ Tampilkan
+   Nama Mahasiswa
+   o Progress (dari total materi yang sudah dibaca)
+   Gunakan Progress Bar berbasis Tailwind untuk menunjukkan progres belajar. Ada tombol Lanjutkan Belajar yang menuju ke halaman/admin/kelas.
+3. Halaman Modul/Kelas (Path: /admin/kelas)
+   ⚫ Menampilkan daftar materi (gunakan dummy Data) dalam bentuk Accordion: Setiap accordion memiliki:
+   Judul Materi
+   • Deskripsi
+   Tombol "Tandai Selesai"
+   Tombol "Tanya Dosen"
+   Progress bar harus update ketika materi ditandai selesai.
+   Modal "Tanya Dosen":
+   o Modal berisi textarea dan tombol kirim.
+   • Setelah dikirim, tampilkan toast "Pertanyaan berhasil dikirim".
+   Accordion aktif hanya satu yang bisa dibuka sekaligus.
+   Gunakan useState, props, dan lifting state dengan tepat
+
+Petunjuk Teknis
+Struktur folder telah disediakan
+Data dummy tersedia di utils/dummyData.js
+Semua state harus dikelola secara lokal, dengan lifting state ke komponen parent jika dibutuhkan. ⚫ Komponen harus reusable dan clean.
+Accordion hanya bisa buka satu dalam satu waktu.
+Modal tanya dosen hanya muncul ketika tombol ditekan dan bisa ditutup.
+Gunakan toast dan sweetalert2 sesuai keperluan.
